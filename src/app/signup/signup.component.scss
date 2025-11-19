@@ -1,4 +1,4 @@
-.login-container {
+.signup-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -45,9 +45,9 @@
   }
 }
 
-.login-card-wrapper {
+.signup-card-wrapper {
   width: 100%;
-  max-width: 460px;
+  max-width: 500px;
   position: relative;
   z-index: 1;
   animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -64,7 +64,7 @@
   }
 }
 
-.login-card {
+.signup-card {
   border-radius: 24px !important;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35) !important;
   overflow: hidden;
@@ -159,6 +159,8 @@ form {
 
     &:nth-child(1) { animation-delay: 0.1s; }
     &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.3s; }
+    &:nth-child(4) { animation-delay: 0.4s; }
   }
 }
 
@@ -360,12 +362,12 @@ form {
   }
 }
 
-.signup-link {
+.login-link {
   margin-top: 32px;
   text-align: center;
   padding-top: 28px;
   border-top: 2px solid #f0f2f5;
-  animation: fadeIn 0.8s ease-out 0.4s backwards;
+  animation: fadeIn 0.8s ease-out 0.5s backwards;
 
   span {
     color: #718096;
@@ -397,15 +399,15 @@ form {
 
 // Responsive Design
 @media (max-width: 600px) {
-  .login-container {
+  .signup-container {
     padding: 16px;
   }
 
-  .login-card-wrapper {
+  .signup-card-wrapper {
     max-width: 100%;
   }
 
-  .login-card {
+  .signup-card {
     border-radius: 20px !important;
 
     ::ng-deep .mat-mdc-card-header {

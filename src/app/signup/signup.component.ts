@@ -11,7 +11,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-signup',
   standalone: true,
   imports: [
     CommonModule,
@@ -24,11 +24,11 @@ import { AuthService } from '../services/auth.service';
     MatIconModule,
     MatSnackBarModule
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './signup.component.html',
+  styleUrl: './signup.component.scss'
 })
-export class LoginComponent {
-  loginForm: FormGroup;
+export class SignupComponent {
+  signupForm: FormGroup;
   hidePassword = true;
   loading = false;
 
@@ -38,34 +38,31 @@ export class LoginComponent {
     private router: Router,
     private snackBar: MatSnackBar
   ) {
-    this.loginForm = this.fb.group({
+    this.signupForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      contactNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
+    if (this.signupForm.valid) {
       this.loading = true;
-      this.authService.login(this.loginForm.value).subscribe({
+      this.authService.signup(this.signupForm.value).subscribe({
         next: (response) => {
           this.loading = false;
-          this.snackBar.open('Login successful!', 'Close', {
+          this.snackBar.open('Signup successful! Please login.', 'Close', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: ['success-snackbar']
           });
-          // Store token if provided
-          if (response.token) {
-            localStorage.setItem('authToken', response.token);
-          }
-          // Navigate to dashboard or home page
-          // this.router.navigate(['/dashboard']);
+          this.router.navigate(['/login']);
         },
         error: (error) => {
           this.loading = false;
-          const errorMessage = error.error?.message || 'Login failed. Please check your credentials.';
+          const errorMessage = error.error?.message || 'Signup failed. Please try again.';
           this.snackBar.open(errorMessage, 'Close', {
             duration: 4000,
             horizontalPosition: 'center',
@@ -75,7 +72,7 @@ export class LoginComponent {
         }
       });
     } else {
-      this.markFormGroupTouched(this.loginForm);
+      this.markFormGroupTouched(this.signupForm);
     }
   }
 
@@ -87,7 +84,7 @@ export class LoginComponent {
   }
 
   getErrorMessage(fieldName: string): string {
-    const control = this.loginForm.get(fieldName);
+    const control = this.signupForm.get(fieldName);
     if (control?.hasError('required')) {
       return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
     }
@@ -97,6 +94,9 @@ export class LoginComponent {
     if (control?.hasError('minlength')) {
       const minLength = control.errors?.['minlength'].requiredLength;
       return `Minimum ${minLength} characters required`;
+    }
+    if (control?.hasError('pattern')) {
+      return 'Please enter a valid contact number';
     }
     return '';
   }
