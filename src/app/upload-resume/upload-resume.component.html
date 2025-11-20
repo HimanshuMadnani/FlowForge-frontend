@@ -1,0 +1,104 @@
+<div class="upload-container">
+  <div class="upload-card-wrapper">
+    <mat-card class="upload-card">
+      <mat-card-header>
+        <div class="header-content">
+          <button mat-icon-button class="logout-button" (click)="logout()" matTooltip="Logout">
+            <mat-icon>logout</mat-icon>
+          </button>
+          <mat-icon class="logo-icon">description</mat-icon>
+          <h1>Transform Your Resume</h1>
+          <p class="subtitle">Upload your resume and job description to get started</p>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+          <!-- File Upload Section -->
+          <div class="upload-section">
+            <h3 class="section-title">
+              <mat-icon>upload_file</mat-icon>
+              Upload Resume (PDF)
+            </h3>
+            
+            <div 
+              class="file-drop-zone"
+              [class.drag-over]="dragOver"
+              [class.has-file]="selectedFile"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
+              (click)="fileInput.click()">
+              
+              <input 
+                #fileInput
+                type="file" 
+                accept=".pdf"
+                (change)="onFileSelected($event)"
+                style="display: none;">
+              
+              <div class="drop-zone-content" *ngIf="!selectedFile">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <p class="drop-text">Drag & drop your resume here</p>
+                <p class="or-text">or</p>
+                <button mat-raised-button color="primary" type="button" class="browse-button">
+                  Browse Files
+                </button>
+                <p class="file-hint">PDF files only (Max 10MB)</p>
+              </div>
+
+              <div class="file-preview" *ngIf="selectedFile">
+                <mat-icon class="file-icon">picture_as_pdf</mat-icon>
+                <div class="file-info">
+                  <p class="file-name">{{ fileName }}</p>
+                  <p class="file-size">{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</p>
+                </div>
+                <button 
+                  mat-icon-button 
+                  type="button"
+                  class="remove-button"
+                  (click)="removeFile(); $event.stopPropagation()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Job Description Section -->
+          <div class="job-description-section">
+            <h3 class="section-title">
+              <mat-icon>work</mat-icon>
+              Job Description
+            </h3>
+            
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Enter Job Description</mat-label>
+              <textarea 
+                matInput 
+                formControlName="jobDescription"
+                rows="8"
+                placeholder="Paste the job description here...&#10;&#10;Include key requirements, responsibilities, and qualifications."></textarea>
+              <mat-icon matIconPrefix>description</mat-icon>
+              <mat-error *ngIf="uploadForm.get('jobDescription')?.touched && uploadForm.get('jobDescription')?.invalid">
+                {{ getErrorMessage() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit" 
+            class="submit-button"
+            [disabled]="loading || !selectedFile">
+            <mat-icon *ngIf="!loading">auto_fix_high</mat-icon>
+            <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
+            <span *ngIf="!loading">Transform Resume</span>
+            <span *ngIf="loading">Processing...</span>
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

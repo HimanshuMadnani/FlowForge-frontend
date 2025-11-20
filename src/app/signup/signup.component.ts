@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -24,6 +25,7 @@ import { AuthService } from '../services/auth.service';
     MatIconModule,
     MatSnackBarModule
   ],
+  providers: [CookieService],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })

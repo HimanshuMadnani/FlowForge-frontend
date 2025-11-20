@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -24,6 +25,7 @@ import { AuthService } from '../services/auth.service';
     MatIconModule,
     MatSnackBarModule
   ],
+  providers: [CookieService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -36,7 +38,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cookieService: CookieService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -50,18 +53,33 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           this.loading = false;
-          this.snackBar.open('Login successful!', 'Close', {
+          
+          // Store token in cookies
+          if (response.token) {
+            // Set cookie to expire in 10 hours (matching the JWT expiry)
+            const expiryDate = new Date();
+            expiryDate.setHours(expiryDate.getHours() + 10);
+            
+            this.cookieService.set(
+              'authToken', 
+              response.token, 
+              expiryDate,
+              '/', // path
+              '', // domain
+              true, // secure (use true in production with HTTPS)
+              'Strict' // sameSite
+            );
+          }
+          
+          this.snackBar.open('Login successful! Welcome back.', 'Close', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: ['success-snackbar']
           });
-          // Store token if provided
-          if (response.token) {
-            localStorage.setItem('authToken', response.token);
-          }
-          // Navigate to dashboard or home page
-          // this.router.navigate(['/dashboard']);
+          
+          // Navigate to upload resume page
+          this.router.navigate(['/upload-resume']);
         },
         error: (error) => {
           this.loading = false;
