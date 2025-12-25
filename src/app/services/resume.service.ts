@@ -13,7 +13,7 @@ export interface ResumeTransformResponse {
   providedIn: 'root'
 })
 export class ResumeService {
-  private apiUrl = 'http://localhost:8082/api/resume';
+  private apiUrl = 'http://localhost:8080/api/resume';
 
   constructor(
     private http: HttpClient,
