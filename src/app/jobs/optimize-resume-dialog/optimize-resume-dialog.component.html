@@ -1,0 +1,96 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <div class="header-icon">
+            <mat-icon>auto_fix_high</mat-icon>
+        </div>
+        <h2 mat-dialog-title>Optimize Your Resume</h2>
+        <p class="dialog-subtitle">Tailor your resume for <strong>{{ data.jobTitle }}</strong> at <strong>{{
+                data.company }}</strong></p>
+    </div>
+
+    <mat-dialog-content>
+        <!-- File Upload Section -->
+        <div class="upload-section">
+            <label class="section-label">Upload Your Resume</label>
+
+            <div class="file-drop-zone" [class.has-file]="selectedFile" [class.drag-over]="false"
+                (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
+
+                <input type="file" #fileInput hidden accept=".pdf" (change)="onFileSelected($event)">
+
+                <div class="drop-content" *ngIf="!selectedFile">
+                    <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                    <p class="drop-text">Drag & drop your resume here</p>
+                    <p class="drop-subtext">or click to browse</p>
+                    <span class="file-type-hint">PDF files only</span>
+                </div>
+
+                <div class="file-preview" *ngIf="selectedFile">
+                    <mat-icon class="file-icon">description</mat-icon>
+                    <div class="file-info">
+                        <span class="file-name">{{ selectedFile.name }}</span>
+                        <span class="file-size">{{ (selectedFile.size / 1024).toFixed(1) }} KB</span>
+                    </div>
+                    <button mat-icon-button class="remove-file" (click)="removeFile(); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template Selection -->
+        <div class="template-section">
+            <mat-form-field appearance="outline" class="template-field">
+                <mat-label>Resume Template</mat-label>
+                <mat-select [(ngModel)]="templateId">
+                    <mat-option *ngFor="let template of templates" [value]="template.id">
+                        {{ template.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>style</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <!-- Job Description Preview -->
+        <div class="job-preview-section">
+            <label class="section-label">Target Job Description</label>
+            <div class="job-preview">
+                <p>{{ data.jobDescription | slice:0:300 }}{{ data.jobDescription.length > 300 ? '...' : '' }}</p>
+            </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div class="status-section" *ngIf="isLoading || isDownloading || errorMessage || successMessage">
+            <div class="loading-indicator" *ngIf="isLoading">
+                <mat-spinner diameter="24"></mat-spinner>
+                <span>Optimizing your resume...</span>
+            </div>
+
+            <div class="loading-indicator" *ngIf="isDownloading">
+                <mat-spinner diameter="24"></mat-spinner>
+                <span>Downloading optimized resume...</span>
+            </div>
+
+            <div class="error-message" *ngIf="errorMessage">
+                <mat-icon>error_outline</mat-icon>
+                <span>{{ errorMessage }}</span>
+            </div>
+
+            <div class="success-message" *ngIf="successMessage">
+                <mat-icon>check_circle</mat-icon>
+                <span>{{ successMessage }}</span>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button (click)="onCancel()" [disabled]="isLoading || isDownloading">
+            Cancel
+        </button>
+        <button mat-raised-button color="primary" (click)="optimizeResume()"
+            [disabled]="!selectedFile || isLoading || isDownloading">
+            <mat-icon>auto_fix_high</mat-icon>
+            Optimize Resume
+        </button>
+    </mat-dialog-actions>
+</div>
