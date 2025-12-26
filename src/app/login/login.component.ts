@@ -53,16 +53,16 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           this.loading = false;
-          
+
           // Store token in cookies
           if (response.token) {
             // Set cookie to expire in 10 hours (matching the JWT expiry)
             const expiryDate = new Date();
             expiryDate.setHours(expiryDate.getHours() + 10);
-            
+
             this.cookieService.set(
-              'authToken', 
-              response.token, 
+              'authToken',
+              response.token,
               expiryDate,
               '/', // path
               '', // domain
@@ -70,16 +70,16 @@ export class LoginComponent {
               'Strict' // sameSite
             );
           }
-          
+
           this.snackBar.open('Login successful! Welcome back.', 'Close', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: ['success-snackbar']
           });
-          
-          // Navigate to upload resume page
-          this.router.navigate(['/upload-resume']);
+
+          // Navigate to dashboard
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           this.loading = false;

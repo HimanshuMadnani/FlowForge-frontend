@@ -1,0 +1,242 @@
+// Color palette
+$primary-color: #667eea;
+$primary-dark: #5a67d8;
+$secondary-color: #764ba2;
+$sidebar-bg: #1a1a2e;
+$sidebar-hover: #16213e;
+$text-light: #ffffff;
+$text-muted: #a0aec0;
+$bg-light: #f5f7fa;
+$header-bg: #ffffff;
+$shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background: $bg-light;
+}
+
+// Sidebar Styles
+.sidebar {
+    width: 260px;
+    background: $sidebar-bg;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+    position: fixed;
+    height: 100vh;
+    z-index: 1000;
+
+    &.collapsed {
+        width: 70px;
+
+        .logo-text,
+        .nav-label {
+            display: none;
+        }
+
+        .nav-item {
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .logout-btn {
+            justify-content: center;
+
+            span {
+                display: none;
+            }
+        }
+    }
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .logo-icon {
+        color: $primary-color;
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .logo-text {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $text-light;
+        letter-spacing: -0.5px;
+    }
+}
+
+.toggle-btn {
+    color: $text-muted;
+
+    &:hover {
+        color: $text-light;
+    }
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem 1.25rem;
+    color: $text-muted;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    margin: 0 0.5rem;
+    border-radius: 8px;
+
+    &:hover {
+        background: $sidebar-hover;
+        color: $text-light;
+    }
+
+    &.active {
+        background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+        color: $text-light;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+
+        .nav-icon {
+            color: $text-light;
+        }
+    }
+
+    .nav-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+    }
+
+    .nav-label {
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    mat-divider {
+        display: none;
+    }
+}
+
+.logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+    color: $text-muted;
+    border-radius: 8px;
+    justify-content: flex-start;
+
+    &:hover {
+        background: rgba(245, 101, 101, 0.2);
+        color: #f56565;
+    }
+
+    mat-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+    }
+}
+
+// Main Content
+.main-content {
+    flex: 1;
+    margin-left: 260px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+
+    .sidebar.collapsed~& {
+        margin-left: 70px;
+    }
+}
+
+.sidebar.collapsed+.main-content {
+    margin-left: 70px;
+}
+
+.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    background: $header-bg;
+    box-shadow: $shadow;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .mobile-menu-btn {
+        display: none;
+    }
+
+    .page-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin: 0;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+
+.page-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+
+        &:not(.collapsed) {
+            transform: translateX(0);
+            width: 260px;
+        }
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+    }
+
+    .main-header .mobile-menu-btn {
+        display: block;
+    }
+}
